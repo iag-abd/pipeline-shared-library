@@ -39,21 +39,9 @@ def call(config = [:]) {
 
   helper = abd.github.pipeline.Helper
 
-  ping
-
-  // withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
-  // //   //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
-  // //   response = helper.postIt(slackURI, payload)
-  // //   echo "slack response::::${response}"
-  // echo "here"
-  // }
-}
-
-@NonCPS
-def ping() {
-  url = 'http://google.com.au'
-  url = new URL(url)
-  connection = url.openConnection()
-  connection = null
-  return "hi"
+  withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
+    //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
+    response = helper.postItToSlack(slackURI, payload)
+    echo "slack response::::${response}"
+  }
 }
