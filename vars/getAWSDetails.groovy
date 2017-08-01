@@ -10,5 +10,5 @@ def call() {
   ecr = account + ".dkr.ecr." + region + ".amazonaws.com"
   echo "ecr: ${ecr}"
 
-  //#return = ["region": region, "account": account, "ecr": ecr]
+  return ["region": region, "account": account, "ecr": ecr]
 }
