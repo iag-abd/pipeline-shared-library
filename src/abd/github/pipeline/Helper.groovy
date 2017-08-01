@@ -17,7 +17,7 @@ class Helper {
     // //  connection = url.openConnection()
     // // }
     //
-    // connection = url.openConnection()
+    connection = url.openConnection()
     //
     // connection.setRequestMethod("POST")
     // connection.doOutput = true
