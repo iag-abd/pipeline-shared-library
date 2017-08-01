@@ -1,9 +1,23 @@
 #!/usr/bin/groovy
 
+/**********
+  slackOut(["channel":"jenkins", "text":"hello from ${BUILD_ID}" ])
+  slackOut(["text":"hello from ${BUILD_ID}" ])
+  slackOut([
+      "text":"hello from ${BUILD_ID}",
+      "channel":"build",
+      "username":"builder",
+      "iconEmoji":":panda_face":"
+  ])
+**********/
+
 import groovy.json.JsonOutput
 
 def call(config = [:]) {
   if (!(config.attachments || config.text)) throw new Exception("need text or attacment or both ${config}")
+
+  //TODO: put proxy back in
+  //TODO: ignore curl secure
 
   //config.text = config.text ?: "hello from ${env.BUILD_ID}"
   config.channel = config.channel ?: env.SLACK_CHANNEL ?: "jenkins"
@@ -44,4 +58,3 @@ def call(config = [:]) {
     sh "curl -X POST --data-urlencode \'${payload}\' ${slackURI}"
   }
 }
-//curl -X POST --data-urlencode 'payload={"text":"hello","channel":"jenkins","username":"jenkinsbot","icon_emoji":":robot_face:","attachments":[]}' 
