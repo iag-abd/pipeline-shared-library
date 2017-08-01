@@ -20,21 +20,21 @@ def call(config = [:]) {
 
   echo "config.channel: ${config.channel}"
 
-  // def payloadJson
-  //
-  // message = [
-  //   text : config.text,
-  //   channel : config.channel,
-  //   username : config.username,
-  //   icon_emoji : config.iconEmoji
-  // ]
-  //
-  // message.attachments = config.attachments ?: []
-  // message.text = config.text ?: null
-  //
-  // payloadJson = JsonOutput.toJson(message)
-  // def payload = "payload=${payloadJson}"
-  //
+  def payloadJson
+
+  message = [
+    text : config.text,
+    channel : config.channel,
+    username : config.username,
+    icon_emoji : config.iconEmoji
+  ]
+
+  message.attachments = config.attachments ?: []
+  message.text = config.text ?: null
+
+  payloadJson = JsonOutput.toJson(message)
+  def payload = "payload=${payloadJson}"
+
   // helper = abd.github.pipeline.Helper
   // withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
   //   //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
