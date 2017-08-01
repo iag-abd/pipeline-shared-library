@@ -7,7 +7,8 @@ def call() {
   echo "region: ${region}"
   account = sh(returnStdout: true, script: 'curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -oP \'(?<="accountId" : ")[^"]*(?=")\'').trim()
   echo "account: ${account}"
-  //ecr = "${account}.dkr.ecr.${region}.amazonaws.com"
+  ecr = account + ".dkr.ecr." + region + ".amazonaws.com"
+  echo "ecr: ${ecr}"
 
   //#return = ["region": region, "account": account, "ecr": ecr]
 }
