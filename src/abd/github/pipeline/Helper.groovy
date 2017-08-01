@@ -17,10 +17,10 @@ class Helper {
     // //  connection = url.openConnection()
     // // }
     //
-    connection = url.openConnection()
-
-    connection.setRequestMethod("POST")
-    connection.doOutput = true
+    // connection = url.openConnection()
+    //
+    // connection.setRequestMethod("POST")
+    // connection.doOutput = true
     //
     // def writer = new OutputStreamWriter(connection.outputStream)
     // writer.write(payload)
