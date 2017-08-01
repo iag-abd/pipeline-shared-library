@@ -8,7 +8,7 @@ class Helper {
     //  proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy_host, proxy_port))
     // }
 
-    // url = new URL(url)
+    url = new URL(url)
     //
     // // def connection
     // // if(proxy_host) {
@@ -17,10 +17,10 @@ class Helper {
     // //  connection = url.openConnection()
     // // }
     //
-    // connection = url.openConnection()
-    //
-    // connection.setRequestMethod("POST")
-    // connection.doOutput = true
+    connection = url.openConnection()
+
+    connection.setRequestMethod("POST")
+    connection.doOutput = true
     //
     // def writer = new OutputStreamWriter(connection.outputStream)
     // writer.write(payload)
