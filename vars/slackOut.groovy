@@ -41,6 +41,7 @@ def call(config = [:]) {
 
   withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
     //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
-    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURI}"
+    sh "curl -X POST --data-urlencode \'${payload}\' ${slackURI}"
   }
 }
+//curl -X POST --data-urlencode 'payload={"text":"hello","channel":"jenkins","username":"jenkinsbot","icon_emoji":":robot_face:","attachments":[]}' 
