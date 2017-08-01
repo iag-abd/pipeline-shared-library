@@ -1,6 +1,8 @@
 #!/usr/bin/groovy
 
-call(String repo, String region) {
+def call(config) {
+  // evaluate the body block, and collect configuration into the object
+  config = config ?: [:]
   echo 'create repo if it does not exist'
-  sh "aws --region ${region} ecr create-repository --repository-name ${repo} || echo 'repo exists already'"
+  sh "aws --region ${config.region} ecr create-repository --repository-name ${config.repo} || echo 'repo exists already'"
 }
