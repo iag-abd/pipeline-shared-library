@@ -35,7 +35,8 @@ def call(config = [:]) {
 
   helper = abd.github.pipeline.Helper
   withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
-    response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
+    //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
+    response = helper.postIt(slackURI, payload)
     echo "slack response::::${response}"
   }
 }
