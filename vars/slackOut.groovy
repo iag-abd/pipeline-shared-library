@@ -35,6 +35,8 @@ def call(config = [:]) {
   payloadJson = JsonOutput.toJson(message)
   def payload = "payload=${payloadJson}"
 
+  echo payload
+
   // helper = abd.github.pipeline.Helper
   // withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
   //   //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
