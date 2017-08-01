@@ -18,6 +18,8 @@ class Helper {
     // // }
     //
     connection = url.openConnection()
+
+    return "hi"
     //
     // connection.setRequestMethod("POST")
     // connection.doOutput = true
