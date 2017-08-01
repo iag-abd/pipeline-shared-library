@@ -10,7 +10,7 @@
 def call(config) {
   // evaluate the body block, and collect configuration into the object
   config = config ?: [:]
-  echo echo 'login to docker in ' + config.region
+  echo 'login to docker in ' + config.region
   sh "eval `aws ecr get-login --region ${config.region}`"
   echo "done ecr login"
 }
