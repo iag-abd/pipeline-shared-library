@@ -2,6 +2,7 @@ package abd.github.pipeline
 
 class Helper {
 
+  @NonCPS
   static postIt(url, payload) {
     // def proxy
     // if(proxy_host) {
