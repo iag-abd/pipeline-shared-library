@@ -6,7 +6,7 @@ def call(config) {
   sh """
     cat .git/config
     git config user.email \"${config.email}\"
-    git config user.name \"${config.username}\"
+    git config user.name \"${config.name}\"
     git checkout master
     git checkout develop
   """
