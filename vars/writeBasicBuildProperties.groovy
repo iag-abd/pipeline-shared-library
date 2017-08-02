@@ -1,9 +1,9 @@
 #!/usr/bin/groovy
 
-def call(config) {
+def call(config = [:]) {
   config.property_file_name = config.property_file_name ?: 'build.properties'
   config.version = config.version ?: env.VERSION ?: env.BUILD_ID
-  
+
   sh """
     echo VERSION=${config.version} > ${config.property_file_name}
     echo JOB_DISPLAY_URL=${RUN_DISPLAY_URL} >>${config.property_file_name}
