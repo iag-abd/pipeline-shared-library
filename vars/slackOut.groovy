@@ -49,12 +49,11 @@ def call(config = [:]) {
   payloadJson = JsonOutput.toJson(message)
   def payload = "payload=${payloadJson}"
 
-  echo payload
-
-  helper = abd.github.pipeline.Helper
+  def utils = new abd.github.pipeline.Utils()
 
   withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
-    //response = helper.postIt(slackURI, payload, config.proxyHost, config.proxyPort.toInteger())
-    sh "curl -X POST --data-urlencode \'${payload}\' ${slackURI}"
+    response = utils.postIt(slackURI, payload)
+    echo "slack response::::${response}"
   }
+
 }
