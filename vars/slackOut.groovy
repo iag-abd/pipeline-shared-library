@@ -49,7 +49,7 @@ def call(config = [:]) {
   payloadJson = JsonOutput.toJson(message)
   def payload = "payload=${payloadJson}"
 
-  def utils = new abd.github.pipeline.Utils()
+  def utils = new abd.pipeline.Utils()
 
   withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
     response = utils.postIt(slackURI, payload)
