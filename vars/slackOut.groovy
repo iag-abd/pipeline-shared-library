@@ -32,8 +32,6 @@ def call(config = [:]) {
   //   if (!(config.proxyPort)) throw new Exception("Proxy host but no proxy port")
   // }
 
-  echo "config.channel: ${config.channel}"
-
   def payloadJson
 
   message = [
