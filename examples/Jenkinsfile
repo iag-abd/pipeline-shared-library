@@ -1,0 +1,108 @@
+!/usr/bin/groovy
+
+@Library('github.com/iag-abd/pipeline-shared-library') _
+
+properties(
+  [
+    disableConcurrentBuilds(),
+    //build at least once a month
+    pipelineTriggers([cron('H 4 1 * *')])
+  ]
+)
+
+pipeline {
+  agent any
+
+  environment {
+    REPO_NAMESPACE = 'ops'
+    SERVICE = PROJECT = 'some-container'
+  }
+
+  stages {
+    stage('Generate AWS VARS from meta-data') {
+      steps {
+        script {
+          awsDetails = getAWSDetails()
+          AZ = awsDetails['az']
+          REGION = awsDetails['region']
+          ACCOUNT = awsDetails['account']
+          ECR = awsDetails['ecr']
+          CLI_IMAGE = "${ECR}/${REPO_NAMESPACE}/cli:latest"
+        }
+        sh "env"
+      }
+    }
+
+    stage('Docker setup') {
+      steps {
+        ecrDockerLogin([region: REGION])
+        ecrCreateRepo([region: REGION, repo: "$REPO_NAMESPACE/$SERVICE"])
+      }
+    }
+
+    stage('checkout and setup') {
+      steps {
+        standardCheckOut([
+          credentialsId: credentialsId,
+          email: 'someone@example.com',
+          name: 'mscloud',
+          git_url: git_url
+        ])
+        script {
+          version = simpleSemanticVersion()
+          env.VERSION = version
+          env.TAG = version
+        }
+        createFeatureBranch([version: version])
+        writeFile file: 'VERSION', text: version
+        writeBasicBuildProperties([version: version])
+      }
+    }
+
+    stage('docker build') {
+      steps {
+        sh """
+          docker build -t $REPO_NAMESPACE/$SERVICE:$TAG .
+        """
+      }
+    }
+
+    stage('tag and push images') {
+      steps {
+        sh """
+          docker tag $REPO_NAMESPACE/$SERVICE:$TAG $ECR/$REPO_NAMESPACE/$SERVICE:$TAG
+          docker tag $REPO_NAMESPACE/$SERVICE:$TAG $ECR/$REPO_NAMESPACE/$SERVICE:latest
+        """
+        echo 'push images'
+        sh """
+          docker push $ECR/$REPO_NAMESPACE/$SERVICE:$TAG
+          docker push $ECR/$REPO_NAMESPACE/$SERVICE:latest
+        """
+        echo "list remote"
+        sh "aws --region ${REGION} ecr list-images --repository-name \"$REPO_NAMESPACE/$SERVICE\""
+      }
+    }
+
+    stage('Merge Back') {
+      steps {
+        mergeBackIn([version: version, credentialsId: credentialsId])
+      }
+    }
+  }
+
+  post {
+    always {
+      sh """
+        docker rmi $REPO_NAMESPACE/$SERVICE:$TAG || echo "delete failed: $REPO_NAMESPACE/$SERVICE:$TAG"
+        docker rmi $ECR/$REPO_NAMESPACE/$SERVICE:$TAG || echo "delete failed: $ECR/$REPO_NAMESPACE/$SERVICE:$TAG"
+        docker rmi $ECR/$REPO_NAMESPACE/$SERVICE:latest || echo "delete failed: $ECR/$REPO_NAMESPACE/$SERVICE:latest"
+      """
+    }
+    success {
+      slackOut( [text:"${JOB_NAME}:: ${RUN_DISPLAY_URL} Successfully built: $REPO_NAMESPACE/$SERVICE:$TAG" ] )
+    }
+    failure {
+      slackFail( [ text:"${JOB_NAME} build failed - ${RUN_DISPLAY_URL} - tried to build $REPO_NAMESPACE/$SERVICE:$TAG" ])
+    }
+  }
+}
