@@ -11,7 +11,7 @@ def call(config) {
       git checkout master
       git merge feature/${config.version}
       git push origin master
-      git tag -a ${config.version} -m \"build is `date -d today +'%Y%m%d%H%M'`\" master
+      git tag -a ${config.version} -m \"Build on ${JOB_DISPLAY_URL} at `date -d today +'%Y%m%d%H%M'`\" master
       git push --tags
     """
   }

@@ -5,6 +5,7 @@ def call(config = [:]) {
   script {
     //note: we will support number.number.number and drop anything after the third number
     version_file = config.version_file
+    //TODO: if file does not exist then 0.0.0
     def matcher = readFile(version_file) =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
     matcher[0]
     patch = Integer.parseInt(matcher[0][3]) + 1
