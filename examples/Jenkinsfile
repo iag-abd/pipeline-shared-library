@@ -15,7 +15,9 @@ pipeline {
 
   environment {
     REPO_NAMESPACE = 'ops'
-    SERVICE = PROJECT = 'some-container'
+    SERVICE = 'some container'
+    credentialsId = 'cred_who_can_push'
+    git_url = 'git@somewhere'
   }
 
   stages {
