@@ -48,11 +48,15 @@ def call(config = [:]) {
   def payload = "payload=${payloadJson}"
 
   //def utils = new abd.pipeline.Utils()
+  proxy = ''
+  if (config.proxy) {
+    proxy = "-x ${config.proxy}"
+  }
 
   withCredentials([string(credentialsId: config.slackUriCredentialsId, variable: 'slackURI')]) {
     //response = utils.postIt(slackURI, payload)
     //echo "slack response::::${response}"
-    sh "curl -X POST --data-urlencode \'${payload}\' ${slackURI}"
+    sh "curl ${proxy} -X POST --data-urlencode \'${payload}\' ${slackURI}"
   }
 
 }
