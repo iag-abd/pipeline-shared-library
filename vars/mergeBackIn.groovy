@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
 
-def call(config) {
+def call(config = [:]) {
   config.branch = config.branch ?: 'master'
   config.version = config.version ?: "jenkins-build-${BUILD_ID}"
   sshagent (credentials: [config.credentialsId]) {
