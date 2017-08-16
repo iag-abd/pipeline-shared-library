@@ -1,7 +1,7 @@
 #!/usr/bin/groovy
 
 def call(config) {
-  config.version_file = config.version_file ?: 'VERSION'
+  config.version = config.version ?: "jenkins-build-${BUILD_ID}"
   sshagent (credentials: [config.credentialsId]) {
     sh """
       git commit -a -m \"jenkins build\"
