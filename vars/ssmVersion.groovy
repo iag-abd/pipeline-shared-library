@@ -23,9 +23,7 @@ def call(config = [:]) {
 
     version = v2
   }
-  script {
-    sh "aws ssm put-parameter --name $config.versionParam --type String --value $version --overwrite --region $config.region"
-  }
+
   script {
     sh "aws ssm put-parameter --name $config.versionParam --type String --value $version --overwrite --region $config.region"
   }
