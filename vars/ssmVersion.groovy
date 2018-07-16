@@ -3,12 +3,16 @@
 def call(config = [:]) {
 
   script {
-    versionParam = config.versionParam || error("provide versionParam")
-        
-    sh "aws ssm get-parameter --name $versionParam --region ap-southeast-2 || aws ssm put-parameter --name $versionParam --type String --value 0.0.0 --overwrite --region ap-southeast-2"
+    if (!config.versionParam) {error 'need config.versionParam'}
+    if (!config.region) {error 'need config.region'}
+
+    versionParam = config.versionParam
+    region = config.region
+
+    sh "aws ssm get-parameter --name $versionParam --region ap-southeast-2 || aws ssm put-parameter --name $versionParam --type String --value 0.0.0 --overwrite --region $region"
 
     version = sh (
-        script: "aws ssm get-parameter --name $versionParam --region ap-southeast-2 | jq ' .[] | .Value' --raw-output",
+        script: "aws ssm get-parameter --name $versionParam --region $region| jq ' .[] | .Value' --raw-output",
         returnStdout: true
     ).trim()
           
@@ -17,6 +21,9 @@ def call(config = [:]) {
     def matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
     v2 = matcher[0][1] + "." + matcher[0][2] + "." + (Integer.parseInt(matcher[0][3]) + 1)
     echo v2
+  }
+  script {
+    sh "aws ssm put-parameter --name $config.versionParam --type String --value $version --overwrite --region $config.region"
   }
   return version
 }
