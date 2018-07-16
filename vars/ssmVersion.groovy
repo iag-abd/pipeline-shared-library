@@ -20,7 +20,11 @@ def call(config = [:]) {
           
     def matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
     v2 = matcher[0][1] + "." + matcher[0][2] + "." + (Integer.parseInt(matcher[0][3]) + 1)
-    echo v2
+
+    version = v2
+  }
+  script {
+    sh "aws ssm put-parameter --name $config.versionParam --type String --value $version --overwrite --region $config.region"
   }
   script {
     sh "aws ssm put-parameter --name $config.versionParam --type String --value $version --overwrite --region $config.region"
