@@ -3,8 +3,8 @@
 def call(config = [:]) {
 
   script {
-    versionParam = config.versionParam || error("provide versionParam")
-        
+    versionParam = config.versionParam
+             
     sh "aws ssm get-parameter --name $versionParam --region ap-southeast-2 || aws ssm put-parameter --name $versionParam --type String --value 0.0.0 --overwrite --region ap-southeast-2"
 
     version = sh (
