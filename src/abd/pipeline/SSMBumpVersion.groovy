@@ -1,4 +1,4 @@
-package abd.github.pipeline
+package abd.pipeline
 import com.amazonaws.services.simplesystemsmanagement.*
 import com.amazonaws.services.simplesystemsmanagement.model.*
 import com.amazonaws.regions.Regions
@@ -14,7 +14,7 @@ import com.amazonaws.auth.*
  *
  * Uses the AWS sdk simplesystemsmanagement ssm Parameter Store for semantic versioning in Jenkins Pipeline Jobs
  *
- * Will create parameter if one does not exists
+ * Will create parameter if one does not exist
  *
 */
 
