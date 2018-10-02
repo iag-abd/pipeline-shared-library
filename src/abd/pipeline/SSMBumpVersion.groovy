@@ -17,6 +17,7 @@ import com.amazonaws.auth.*
  * Will create parameter if one does not exist
  * 
  * Static will need to be approved: staticMethod com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder defaultClient
+ * see: https://gist.github.com/daraghmartin/bfeb5b39f4d748b611db2e2058a17efd
  *
 */
 
