@@ -1,4 +1,4 @@
-package abd.github.pipeline
+package abd.pipeline
 
 class Helper {
 

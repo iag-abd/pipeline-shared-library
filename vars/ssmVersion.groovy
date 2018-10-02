@@ -9,7 +9,7 @@ def call(config = [:]) {
     versionParam = config.versionParam
     region = config.region
 
-    sh "aws ssm get-parameter --name $versionParam --region $region || aws ssm put-parameter --name $versionParam --type String --value 0.0.0 --overwrite --region $region"
+    sh "aws ssm get-parameter --name $versionParam --region $region || aws ssm put-parameter --name $versionParam --type String --value 0.0.0 --region $region"
 
     version = sh (
         script: "aws ssm get-parameter --name $versionParam --region $region| jq ' .[] | .Value' --raw-output",
