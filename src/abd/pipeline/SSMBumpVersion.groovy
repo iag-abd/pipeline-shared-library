@@ -20,7 +20,7 @@ import com.amazonaws.auth.*
  *
 */
 
-class SSMBumpVersion() {
+class SSMBumpVersion {
 
   @NonCPS
   def testWithCreds(paramName, region, id, key) {
