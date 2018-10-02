@@ -60,8 +60,8 @@ class SSMBumpVersion {
               .withName(paramName)    
       GetParameterResult result = ssmc.getParameter(request);
 
-      version = result.getParameter().getValue();
-      matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
+      def version = result.getParameter().getValue();
+      def matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
       version = matcher[0][1] + "." + matcher[0][2] + "." + (Integer.parseInt(matcher[0][3]) + 1)
       putParam(paramName, version, true, null, ssmc)
       return version
