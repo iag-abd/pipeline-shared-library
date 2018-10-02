@@ -15,56 +15,61 @@ import com.amazonaws.auth.*
  * Uses the AWS sdk simplesystemsmanagement ssm Parameter Store for semantic versioning in Jenkins Pipeline Jobs
  *
  * Will create parameter if one does not exist
+ * 
+ * Static will need to be approved: staticMethod com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder defaultClient
  *
 */
 
-@NonCPS
-def testWithCreds(paramName, region, id, key) {
-  BasicAWSCredentials awsCreds = new BasicAWSCredentials(id, key);
+class SSMBumpVersion() {
 
-  AWSSimpleSystemsManagement ssmc = AWSSimpleSystemsManagementClientBuilder.standard()
-    .withRegion(Regions.AP_SOUTHEAST_2)
-    .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-    .build();
+  @NonCPS
+  def testWithCreds(paramName, region, id, key) {
+    BasicAWSCredentials awsCreds = new BasicAWSCredentials(id, key);
 
-  return getVersion(paramName, ssmc)
-}
+    AWSSimpleSystemsManagement ssmc = AWSSimpleSystemsManagementClientBuilder.standard()
+      .withRegion(Regions.AP_SOUTHEAST_2)
+      .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+      .build();
 
-@NonCPS
-def getVersion(paramName) {
-  AWSSimpleSystemsManagement ssmc = AWSSimpleSystemsManagementClientBuilder.defaultClient();
-  return getVersion(paramName, ssmc)
-}
+    return getVersion(paramName, ssmc)
+  }
 
-@NonCPS
-def putParam(paramName, value, overwrite, encryptKey, ssmc) {
-  PutParameterRequest putParameterRequest = new PutParameterRequest()
-  ///note note set overwrite
-  putParameterRequest.setOverwrite(overwrite)
-  putParameterRequest.setName(paramName)
-  putParameterRequest.setValue(value)
-  putParameterRequest.setType(ParameterType.String)
-  return ssmc.putParameter(putParameterRequest);
-}
+  @NonCPS
+  def getVersion(paramName) {
+    AWSSimpleSystemsManagement ssmc = AWSSimpleSystemsManagementClientBuilder.defaultClient();
+    return getVersion(paramName, ssmc)
+  }
 
-@NonCPS
-def getVersion(paramName, ssmc) {
-  defaultNewVersion = '0.0.0'
-  try
-  {
-    GetParameterRequest request = new GetParameterRequest()
-            .withName(paramName)    
-    GetParameterResult result = ssmc.getParameter(request);
+  @NonCPS
+  def putParam(paramName, value, overwrite, encryptKey, ssmc) {
+    PutParameterRequest putParameterRequest = new PutParameterRequest()
+    ///note note set overwrite
+    putParameterRequest.setOverwrite(overwrite)
+    putParameterRequest.setName(paramName)
+    putParameterRequest.setValue(value)
+    putParameterRequest.setType(ParameterType.String)
+    return ssmc.putParameter(putParameterRequest);
+  }
 
-    version = result.getParameter().getValue();
-    matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
-    version = matcher[0][1] + "." + matcher[0][2] + "." + (Integer.parseInt(matcher[0][3]) + 1)
-    putParam(paramName, version, true, null, ssmc)
-    return version
-  } 
-  catch(ParameterNotFoundException pnfe)
-  {
-    putParam(paramName, defaultNewVersion, false, null, ssmc) 
-    return defaultNewVersion
+  @NonCPS
+  def getVersion(paramName, ssmc) {
+    defaultNewVersion = '0.0.0'
+    try
+    {
+      GetParameterRequest request = new GetParameterRequest()
+              .withName(paramName)    
+      GetParameterResult result = ssmc.getParameter(request);
+
+      version = result.getParameter().getValue();
+      matcher = version =~ /(?<major>\d*).(?<minor>\d*).(?<revision>\d*)[.-]*(.*)/
+      version = matcher[0][1] + "." + matcher[0][2] + "." + (Integer.parseInt(matcher[0][3]) + 1)
+      putParam(paramName, version, true, null, ssmc)
+      return version
+    } 
+    catch(ParameterNotFoundException pnfe)
+    {
+      putParam(paramName, defaultNewVersion, false, null, ssmc) 
+      return defaultNewVersion
+    }
   }
 }
