@@ -53,7 +53,7 @@ class SSMBumpVersion {
 
   @NonCPS
   def getVersion(paramName, ssmc) {
-    defaultNewVersion = '0.0.0'
+    def defaultNewVersion = '0.0.0'
     try
     {
       GetParameterRequest request = new GetParameterRequest()
